@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: demo-springboot-rs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-springboot
+  template:
+    metadata:
+      labels:
+        app: demo-springboot
+        env: dev
+    spec:
+      containers:
+        - name: demo-springboot
+          image: eduardomelle/demo:v1

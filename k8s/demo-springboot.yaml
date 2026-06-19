@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-springboot
+spec:
+  containers:
+    - name: demo-springboot
+      image: eduardomelle/demo:v1
