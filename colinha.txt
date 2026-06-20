@@ -1,0 +1,99 @@
+Containers na vida real:
+- Introdução ao mundo dos containers: 49:27
+
+docker build -t demo .
+
+docker create --name demo demo:latest
+
+docker container run -d -p 8080:8080 --name demo -e HELLO_NAME=Dudu demo:latest
+
+docker container exec -it demo /bin/bash
+
+java -version
+
+cat /etc/os-release
+
+docker tag eduardomelle/demo
+
+docker push eduardomelle/demo
+
+docker build -t eduardomelle/demo:v1 .
+
+- Melhores práticas na construção de imagens de containers (tudo sobre cache, tamanho e manutenção de imagens): 01:05:02
+
+cache:
+
+# time podman build -t workdir01 -f Containerfile target/
+FROM debian/buildd:stable
+COPY *.jar /deployment/
+RUN apt-get update
+RUN apt -y install default-jdk ssh vim curl
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir02 -f Containerfile target/
+FROM debian/buildd:stable
+RUN apt-get update
+RUN apt -y install default-jdk ssh vim curl
+COPY *.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir03 -f Containerfile target/
+FROM debian/buildd:stable
+RUN apt-get update
+RUN apt -y install default-jdk ssh vim curl
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir04 -f Containerfile target/
+FROM debian/buildd:stable
+RUN apt-get update && \
+    apt -y install default-jdk ssh vim curl
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+tamanho:
+
+# time podman build -t workdir05 -f Containerfile target/
+FROM debian/buildd:stable
+RUN apt-get update && \
+    apt -y install --no-install-recommends default-jdk ssh vim curl
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir06 -f Containerfile target/
+FROM debian/buildd:stable
+RUN apt-get update && \
+    apt -y install --no-install-recommends default-jdk && \
+	rm -rf /var/lib/apt/lists/*
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+manutenibilidade/manutenção:
+
+# time podman build -t workdir07 -f Containerfile target/
+FROM eclipse-temurin
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir08 -f Containerfile target/
+FROM eclipse-temurin:21-jre-alpine
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+
+# time podman build -t workdir09 -f Containerfile target/
+FROM eclipse-temurin:21.0.1_12-jre-alpine
+COPY demo-0.0.1-SNAPSHOT.jar /deployment/
+CMD ["java", "-jar", "/deployment/demo-0.0.1-SNAPSHOT.jar"]
+Começar pela menor imagem possível
+
+Kubernetes para Devs Backend:
+- Parte #1: 57:21
+
+echo -n "Eduardo Secret" | base64
+
+- Parte #2: 31:27
+
+50 + 66 + 58 + 32 = 206 / 10 = 20,6
+
+https://blog.devops.dev/spring-boot-integrated-sql-server-quick-start-demo-10e09536b880
+https://chameerar.medium.com/spring-boot-hibernate-with-microsoft-sql-server-dbdb550bb9dd
