@@ -19,3 +19,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: HELLO_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-springboot
+                  key: HELLO_NAME
