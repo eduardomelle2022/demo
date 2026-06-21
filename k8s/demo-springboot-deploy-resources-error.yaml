@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-springboot-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-springboot
+  template:
+    metadata:
+      labels:
+        app: demo-springboot
+        env: dev
+    spec:
+      containers:
+        - name: demo-springboot
+          image: eduardomelle/demo:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HELLO_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-springboot
+                  key: HELLO_NAME
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "40000m" # 40 cores

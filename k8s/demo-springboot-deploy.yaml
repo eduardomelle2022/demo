@@ -22,7 +22,6 @@ spec:
           env:
             - name: HELLO_NAME
               valueFrom:
-                #configMapKeyRef:
-                secretKeyRef:
+                configMapKeyRef:
                   name: demo-springboot
                   key: HELLO_NAME

@@ -1,4 +1,4 @@
-# time podman build -t workdir?? -f Containerfile ../quarkus/target
+# time podman build -t workdir09 -f Containerfile target/
 
 FROM eclipse-temurin:21.0.1_12-jre-alpine
 

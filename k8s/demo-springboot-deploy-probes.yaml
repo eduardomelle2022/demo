@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-springboot-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-springboot
+  template:
+    metadata:
+      labels:
+        app: demo-springboot
+        env: dev
+    spec:
+      containers:
+        - name: demo-springboot
+          image: eduardomelle/demo:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HELLO_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-springboot
+                  key: HELLO_NAME
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "250m" # 1/4 core
+            limits:
+              memory: "200Mi"
+              cpu: "500m" # 1/2 core
+
+          # 1. Startup Probe: Gives the Java JVM time to initialize before other probes kick in
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            failureThreshold: 30 # Allows up to 5 minutes to start (30 * 10s)
+            periodSeconds: 10
+
+          # 2. Liveness Probe: Regularly checks if the app has deadlocked or crashed
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+
+          # 3. Readiness Probe: Confirms the app and its DB connections can receive web traffic
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 15
+            failureThreshold: 2

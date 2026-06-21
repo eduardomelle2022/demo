@@ -28,7 +28,7 @@ public class HelloController {
 
 	@GetMapping("/hello")
 	public ResponseEntity<String> hello() throws UnknownHostException {
-		String message = "Hello, " + this.name + "! V2: " + i++ + " - " + InetAddress.getLocalHost().getHostName();
+		String message = "Hello, " + this.name + "! V1: " + i++ + " - " + InetAddress.getLocalHost().getHostName();
 		logger.info(message);
 		return ResponseEntity.ok(message);
 	}
